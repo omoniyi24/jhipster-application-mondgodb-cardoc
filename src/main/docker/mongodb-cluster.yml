@@ -1,0 +1,16 @@
+version: '2'
+services:
+    cardocmongodb-mongodb:
+        image: mongo:4.0.2
+        ports:
+            - "27017:27017"
+        command: mongos --configdb cardocmongodb-mongodb-config
+    cardocmongodb-mongodb-node:
+        build:
+            context: .
+            dockerfile: mongodb/MongoDB.Dockerfile
+        command: mongod --replSet rs1 --noprealloc --smallfiles
+    cardocmongodb-mongodb-config:
+        image: mongo:4.0.2
+        container_name: cardocmongodb-mongodb-config
+        command: mongod --noprealloc --smallfiles --configsvr --dbpath /data/db
